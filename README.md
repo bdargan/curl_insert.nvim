@@ -1,10 +1,16 @@
-## Health Checks
+# Curl Insert Plugin for Neovim
+A simple Neovim plugin that fetches content from a URL using curl and inserts it into your current buffer at the cursor position.
+Prerequisites
+
+Neovim (0.5.0 or higher recommended)
+curl must be available in your system PATH
+
+Installation## Health Checks
 
 The plugin includes a health check module that verifies:
 
 1. Curl is installed and in your PATH
 2. Curl version is at least 8.7 (recommended minimum version)
-3. Jq is installed (optional, used for JSON formatting)
 
 You can run the health check with:
 
@@ -15,7 +21,7 @@ You can run the health check with:
 The plugin will also automatically check curl requirements on startup and display warnings if necessary.### Load Content to a New Buffer with Correct Filetype
 
 ```
-:CurlToBuffer https://example.com/data.json
+:CurlToBuf https://example.com/data.json
 ```
 
 This will:
@@ -29,7 +35,6 @@ This will:
 You can also use the URL under your cursor or from selection:
 
 ```
-:CurlToBufferUnderCursor
 ```# Curl Insert Plugin for Neovim
 
 A simple Neovim plugin that fetches content from a URL using `curl` and inserts it into your current buffer at the cursor position.
