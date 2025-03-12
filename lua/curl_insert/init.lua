@@ -28,7 +28,7 @@ function M.fetch_title_and_create_link(url)
 			row - 1,
 			col, -- Start position (0-indexed row)
 			row - 1,
-			col, -- End position
+			col + #url,
 			{ markdown_link } -- Text to insert
 		)
 
