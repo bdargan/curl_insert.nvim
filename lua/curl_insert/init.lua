@@ -10,7 +10,7 @@ M.curl_command = {
 function M.fetch_title_and_create_link(url)
 	-- Get the current cursor position
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
-	local row, col = cursor_pos[1], cursor_pos[2]
+	local row, col = cursor_pos[1], cursor_pos[2] + 1
 
 	local html_content = M.fetch(url)
 
@@ -40,6 +40,8 @@ end
 
 -- Function to get selected text
 function M.get_visual_selection()
+	vim.notify("get_visual_selection", vim.log.levels.INFO)
+
 	-- Save the current register content and selection type
 	local reg_save = vim.fn.getreg('"')
 	local regtype_save = vim.fn.getregtype('"')
@@ -95,17 +97,26 @@ end
 
 -- Function to extract URL from the word under cursor
 function M.get_url_under_cursor()
-	vim.notify("get_url_under_cursor", vim.log.levels.DEBUG)
 	-- Get the current buffer and cursor position
 	local line = vim.api.nvim_get_current_line()
-	local col = vim.api.nvim_win_get_cursor(0)[2]
+	local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- vim api is 0 based, but lua isnt
+
+	vim.notify("get_url_under_cursor" .. line .. " " .. col, vim.log.levels.DEBUG)
 
 	-- Find the beginning of the URL
 	local start_idx = col
 	while start_idx > 0 and not line:sub(start_idx, start_idx):match("[ \t\n\r]") do
 		start_idx = start_idx - 1
 	end
-	start_idx = start_idx + 1 -- Adjust after finding a non-URL character
+
+	if line:sub(start_idx, start_idx):match("[ \t\n\r]") then
+		start_idx = start_idx + 1 -- Adjust after finding a non-URL character
+	else
+		vim.notify("url not found" .. line, vim.log.levels.DEBUG)
+		return nil
+	end
+
+	vim.notify("start_idx", start_idx, vim.log.levels.DEBUG)
 
 	-- Find the end of the URL
 	local end_idx = col
@@ -120,7 +131,7 @@ function M.get_url_under_cursor()
 	-- Basic URL validation (could be expanded)
 	if url:match("^https?://") then
 		return url
-	elseif url:match("^www%.") then
+	elseif url:match("^\\w%\\.") then
 		return "http://" .. url
 	end
 
@@ -184,7 +195,7 @@ end
 function M.fetch_and_insert(url)
 	-- Get the current cursor position
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
-	local row, col = cursor_pos[1], cursor_pos[2]
+	local row, col = cursor_pos[1], cursor_pos[2] + 1
 	local content = M.fetch(url)
 	local lines = vim.split("\n")
 
@@ -346,8 +357,8 @@ function M.setup()
 	-- Command to create markdown link with title from URL under cursor or selection
 	vim.api.nvim_create_user_command("CurlMarkdownLink", function()
 		local url = M.get_url()
-		vim.notify("fetch_title_and_create_link" .. url, vim.log.levels.DEBUG)
 		if url then
+			vim.notify("fetch_title_and_create_link" .. url, vim.log.levels.DEBUG)
 			M.fetch_title_and_create_link(url)
 		else
 			vim.notify("No valid URL found under cursor or in selection", vim.log.levels.ERROR)
