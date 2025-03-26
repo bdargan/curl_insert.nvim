@@ -8,3 +8,10 @@ end
 
 -- Load the plugin
 require("curl_insert").setup()
+
+vim.keymap.set(
+	"n",
+	"<leader>mL",
+	":CurlMarkdownLink<CR>",
+	{ noremap = true, desc = "Create markdown link from URL under cursor or from selection" }
+)

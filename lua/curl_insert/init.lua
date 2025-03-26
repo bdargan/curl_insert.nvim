@@ -10,7 +10,7 @@ M.curl_command = {
 function M.fetch_title_and_create_link(url)
 	-- Get the current cursor position
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
-	local row, col = cursor_pos[1], cursor_pos[2] + 1
+	local row, col = cursor_pos[1], cursor_pos[2]
 
 	local html_content = M.fetch(url)
 
@@ -195,7 +195,7 @@ end
 function M.fetch_and_insert(url)
 	-- Get the current cursor position
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
-	local row, col = cursor_pos[1], cursor_pos[2] + 1
+	local row, col = cursor_pos[1], cursor_pos[2]
 	local content = M.fetch(url)
 	local lines = vim.split("\n")
 
@@ -378,8 +378,8 @@ function M.setup()
 	})
 
 	-- Optional keymapping examples (commented out by default)
-	-- vim.keymap.set('n', '<leader>cu', ':CurlInsert<CR>', { noremap = true, desc = 'Curl Insert URL under cursor or selection' })
-	-- vim.keymap.set('n', '<leader>cm', ':CurlMarkdownLink<CR>', { noremap = true, desc = 'Create markdown link from URL under cursor' })
+	-- vim.keymap.set('n', '<leader>cI', ':CurlInsert<CR>', { noremap = true, desc = 'Curl Insert body from URL under cursor or selection' })
+	-- vim.keymap.set('n', '<leader>mL', ':CurlMarkdownLink<CR>', { noremap = true, desc = 'Create markdown link from URL under cursor or from selection' })
 	-- vim.keymap.set('v', '<leader>cm', ':CurlMarkdownLink<CR>', { noremap = true, desc = 'Create markdown link from URL in selection' })
 end
 
